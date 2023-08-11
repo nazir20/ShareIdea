@@ -2,6 +2,7 @@ package com.example.ShareIdea.Controllers;
 
 import com.example.ShareIdea.Entity.User;
 import com.example.ShareIdea.Repository.UserRepository;
+import com.example.ShareIdea.Service.UserService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,47 +12,36 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserRepository userRepository;
-    public UserController(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping
     public List<User> getAll(){
-        return userRepository.findAll();
+        return userService.getAllUsers();
     }
 
     @PostMapping
     public User createUser(@RequestBody User newUser){
-        return userRepository.save(newUser);
+        return userService.saveUser(newUser);
     }
 
 
     @GetMapping("/{userId}")
     public User getOneUser(@PathVariable Long userId){
-        return userRepository.findById(userId).orElse(null);
+        return userService.getUser(userId);
     }
 
     @PutMapping("/{userId}")
     public User updateUser(@PathVariable Long userId, @RequestBody User newUser){
-        Optional<User> user = userRepository.findById(userId);
-        if(user.isPresent()){
-            User foundedUser = user.get();
-            foundedUser.setUsername(newUser.getUsername());
-            foundedUser.setPassword(newUser.getPassword());
-            userRepository.save(foundedUser);
-            return foundedUser;
-        }else{
-            return null;
-        }
+        return userService.updateUser(userId, newUser);
     }
 
     @DeleteMapping("/{userId}")
     public void deleteUser(@PathVariable Long userId){
-        userRepository.deleteById(userId);
+        userService.deleteUser(userId);
     }
-
-
 
 
 }
