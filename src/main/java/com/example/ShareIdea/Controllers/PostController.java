@@ -3,6 +3,7 @@ package com.example.ShareIdea.Controllers;
 import com.example.ShareIdea.Entity.Post;
 import com.example.ShareIdea.Request.PostCreateRequest;
 import com.example.ShareIdea.Request.PostUpdateRequest;
+import com.example.ShareIdea.Response.PostResponse;
 import com.example.ShareIdea.Service.PostService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class PostController {
     }
 
     @GetMapping
-    public List<Post> getAllPosts(@RequestParam Optional<Long> userId){
+    public List<PostResponse> getAllPosts(@RequestParam Optional<Long> userId){
         return postService.getAllPosts(userId);
     }
 

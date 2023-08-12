@@ -5,10 +5,12 @@ import com.example.ShareIdea.Entity.User;
 import com.example.ShareIdea.Repository.PostRepository;
 import com.example.ShareIdea.Request.PostCreateRequest;
 import com.example.ShareIdea.Request.PostUpdateRequest;
+import com.example.ShareIdea.Response.PostResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService {
@@ -21,12 +23,15 @@ public class PostService {
         this.userService = userService;
     }
 
-    public List<Post> getAllPosts(Optional<Long> userId) {
+    public List<PostResponse> getAllPosts(Optional<Long> userId) {
+
+        List<Post> postList;
         if(userId.isPresent()){
-            return postRepository.findByUserId(userId);
+            postList = postRepository.findByUserId(userId);
         }else{
-            return postRepository.findAll();
+            postList=  postRepository.findAll();
         }
+        return postList.stream().map(p-> new PostResponse(p)).collect(Collectors.toList());
     }
 
 
