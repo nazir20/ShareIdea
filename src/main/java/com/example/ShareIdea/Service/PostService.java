@@ -1,11 +1,16 @@
 package com.example.ShareIdea.Service;
 
+import com.example.ShareIdea.Entity.Like;
 import com.example.ShareIdea.Entity.Post;
 import com.example.ShareIdea.Entity.User;
+import com.example.ShareIdea.Repository.LikeRepository;
 import com.example.ShareIdea.Repository.PostRepository;
 import com.example.ShareIdea.Request.PostCreateRequest;
 import com.example.ShareIdea.Request.PostUpdateRequest;
+import com.example.ShareIdea.Response.LikeResponse;
 import com.example.ShareIdea.Response.PostResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,10 +22,16 @@ public class PostService {
 
     private PostRepository postRepository;
     private UserService userService;
+    private LikeService likeService;
 
     public PostService(PostRepository postRepository, UserService userService) {
         this.postRepository = postRepository;
         this.userService = userService;
+    }
+
+    @Autowired
+    public void setLikeService(LikeService likeService){
+        this.likeService = likeService;
     }
 
     public List<PostResponse> getAllPosts(Optional<Long> userId) {
@@ -31,7 +42,10 @@ public class PostService {
         }else{
             postList=  postRepository.findAll();
         }
-        return postList.stream().map(p-> new PostResponse(p)).collect(Collectors.toList());
+        return postList.stream().map(p-> {
+            List<LikeResponse> likes = likeService.getAllLikesByParam(Optional.ofNullable(null), Optional.of(p.getId()));
+            return new PostResponse(p, likes);
+        }).collect(Collectors.toList());
     }
 
 

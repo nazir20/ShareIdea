@@ -5,10 +5,13 @@ import com.example.ShareIdea.Entity.Post;
 import com.example.ShareIdea.Entity.User;
 import com.example.ShareIdea.Repository.LikeRepository;
 import com.example.ShareIdea.Request.LikeCreateRequest;
+import com.example.ShareIdea.Response.LikeResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class LikeService {
@@ -24,17 +27,22 @@ public class LikeService {
     }
 
 
-    public List<Like> getAllLikesByParam(Optional<Long> userId, Optional<Long> postId) {
+
+    public List<LikeResponse> getAllLikesByParam(Optional<Long> userId, Optional<Long> postId) {
+
+        List<Like> likes;
 
         if(userId.isPresent() && postId.isPresent()){
-            return likeRepository.findByUserIdAndPostId(userId.get(), postId.get());
+            likes = likeRepository.findByUserIdAndPostId(userId.get(), postId.get());
         }else if(userId.isPresent()){
-            return likeRepository.findByUserId(userId.get());
+            likes =  likeRepository.findByUserId(userId.get());
         }else if(postId.isPresent()){
-            return likeRepository.findByPostId(postId.get());
+            likes =  likeRepository.findByPostId(postId.get());
         }else{
-            return likeRepository.findAll();
+            likes = likeRepository.findAll();
         }
+
+        return likes.stream().map(like -> new LikeResponse(like)).collect(Collectors.toList());
     }
 
     public Like getOneLikeById(Long likeId) {

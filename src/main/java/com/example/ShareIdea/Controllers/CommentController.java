@@ -3,6 +3,7 @@ package com.example.ShareIdea.Controllers;
 import com.example.ShareIdea.Entity.Comment;
 import com.example.ShareIdea.Request.CommentCreateRequest;
 import com.example.ShareIdea.Request.CommentUpdateRequest;
+import com.example.ShareIdea.Response.CommentResponse;
 import com.example.ShareIdea.Service.CommentService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class CommentController {
     }
 
     @GetMapping
-    public List<Comment> getAllComments(@RequestParam Optional<Long> userId, @RequestParam Optional<Long> postId){
+    public List<CommentResponse> getAllComments(@RequestParam Optional<Long> userId, @RequestParam Optional<Long> postId){
         return commentService.getAllCommentsByParam(userId, postId);
     }
 

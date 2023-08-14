@@ -6,10 +6,12 @@ import com.example.ShareIdea.Entity.User;
 import com.example.ShareIdea.Repository.CommentRepository;
 import com.example.ShareIdea.Request.CommentCreateRequest;
 import com.example.ShareIdea.Request.CommentUpdateRequest;
+import com.example.ShareIdea.Response.CommentResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CommentService {
@@ -24,18 +26,20 @@ public class CommentService {
         this.postService = postService;
     }
 
-    public List<Comment> getAllCommentsByParam(Optional<Long> userId, Optional<Long> postId) {
+    public List<CommentResponse> getAllCommentsByParam(Optional<Long> userId, Optional<Long> postId) {
+
+        List<Comment> comments;
         if(userId.isPresent() && postId.isPresent()){
-            commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
+            comments = commentRepository.findByUserIdAndPostId(userId.get(), postId.get());
         }else if(userId.isPresent()){
-            return commentRepository.findByUserId(userId.get());
+            comments = commentRepository.findByUserId(userId.get());
         }else if(postId.isPresent()){
-            return commentRepository.findByPostId(postId.get());
+            comments =  commentRepository.findByPostId(postId.get());
         }else{
-            return commentRepository.findAll();
+            comments =  commentRepository.findAll();
         }
 
-        return null;
+        return comments.stream().map(comment -> new CommentResponse(comment)).collect(Collectors.toList());
     }
 
     public Comment getOneCommentById(Long commentId) {

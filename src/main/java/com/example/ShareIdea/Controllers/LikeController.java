@@ -2,6 +2,7 @@ package com.example.ShareIdea.Controllers;
 
 import com.example.ShareIdea.Entity.Like;
 import com.example.ShareIdea.Request.LikeCreateRequest;
+import com.example.ShareIdea.Response.LikeResponse;
 import com.example.ShareIdea.Service.LikeService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ public class LikeController {
     }
 
     @GetMapping
-    public List<Like> getAllLikes(@RequestParam Optional<Long> userId, @RequestParam Optional<Long> postId){
+    public List<LikeResponse> getAllLikes(@RequestParam Optional<Long> userId, @RequestParam Optional<Long> postId){
         return likeService.getAllLikesByParam(userId, postId);
     }
 
