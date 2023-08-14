@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class Post {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER)

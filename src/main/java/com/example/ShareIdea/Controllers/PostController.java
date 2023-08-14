@@ -31,6 +31,7 @@ public class PostController {
 
     @PostMapping
     public Post createPost(@RequestBody PostCreateRequest newPostRequest){
+        System.out.println("Post Request Made!");
         return postService.createPost(newPostRequest);
     }
 
